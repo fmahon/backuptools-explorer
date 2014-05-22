@@ -4,6 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.io.*;
+import java.nio.file.*;
+import java.util.Properties;
+
 /******************************************************************************
  * Copyright (c) 2014. Richard Breguet <richard.breguet@gmail.com>            *
  *                                                                            *
@@ -36,14 +40,64 @@ public class Controler {
     @FXML
     TextField vaultDirectory;
 
+    @FXML
+    public void onClickLoad(){
+
+
+    }
+
 
     @FXML
     public void onClick(){
+
+/*
+        name            = backup for testing
+
+        # directory for backup
+        src             = /home/source
+
+        # choice your destination
+        vault.directory = /home/backup
+
+        #if you use the sftp declare type and complete
+        #the credential information.
+
+        # Type of destination use sftp or dir
+        vault.type         = sftp
+        vault.ssh.host     = localhost
+        vault.ssh.user     = username
+        vault.ssh.password = password
+*/
+
+
         String name = vaultName.getText();
         String host = vaultHost.getText();
         String pass = vaultPass.getText();
         String directory = vaultDirectory.getText();
-        vaultName.setText("Hello");
+
+
+        Properties properties = new Properties();
+
+        String filePath = System.getProperty("user.home");
+        String fileName = name + "_config.cfg";
+        Path file_path = Paths.get(filePath + FileSystems.getDefault().getSeparator() + fileName);
+        try {
+
+            //if(file_path.toFile().exists()) {
+            //    properties.load(new FileInputStream(file_path.toFile()));
+            //}else{
+                file_path.toFile().createNewFile();
+            //}
+
+            properties.setProperty("name", name);
+           // properties.setProperty("src","soucre");
+            properties.setProperty("vault.directory", directory);
+
+            properties.store(new FileOutputStream(file_path.toFile()),"new configuration");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

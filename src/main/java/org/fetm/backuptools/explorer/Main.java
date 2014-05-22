@@ -36,8 +36,7 @@ public class Main extends Application{
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.show();
-
-        BackupAgent backupAgent;
+        l
     }
 
     public static void main(String[] args){
