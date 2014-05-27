@@ -1,12 +1,11 @@
-package org.fetm.backuptools.explorer;
+package org.fetm.backuptools.explorer.GUI;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import org.fetm.backuptools.explorer.GUI.MainLayoutController;
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import org.fetm.backuptools.explorer.domain.App;
+import org.fetm.backuptools.explorer.domain.Vault;
+
+import java.io.IOException;
 
 /******************************************************************************
  * Copyright (c) 2014. Richard Breguet <richard.breguet@gmail.com>            *
@@ -26,27 +25,24 @@ import org.fetm.backuptools.explorer.domain.App;
  * If not, see <http://www.gnu.org/licenses/>.                                *
  ******************************************************************************/
 
-public class Main extends Application{
+public class MainLayoutController {
+    private App app;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("MainLayout.fxml"));
-        loader.load();
-        Parent root = loader.getRoot();
-        primaryStage.setTitle("BackUp Tool");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+    @FXML
+    public ListView listview;
 
-        App app = new App();
-        app.setPrimaryStage(primaryStage);
-
-        MainLayoutController controller = loader.getController();
-        controller.setApp(app);
+    @FXML
+    public void onClickAddVault() throws IOException {
+        app.addNewVault();
     }
 
-    public static void main(String[] args){
-        launch(args);
+    public void init(){
+        listview.setItems(app.getVaults());
     }
 
+    public void setApp(App app){
+        this.app = app;
+        init();
+    }
 
 }

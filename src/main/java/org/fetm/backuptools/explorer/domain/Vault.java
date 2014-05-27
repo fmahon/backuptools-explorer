@@ -1,15 +1,5 @@
-package org.fetm.backuptools.explorer;
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import org.fetm.backuptools.explorer.GUI.MainLayoutController;
-import org.fetm.backuptools.explorer.domain.App;
-
 /******************************************************************************
- * Copyright (c) 2014. Richard Breguet <richard.breguet@gmail.com>            *
+ * Copyright (c) 2013,2014. Florian Mahon <florian@faivre-et-mahon.ch>        *
  *                                                                            *
  * This file is part of backuptools.                                          *
  *                                                                            *
@@ -26,27 +16,67 @@ import org.fetm.backuptools.explorer.domain.App;
  * If not, see <http://www.gnu.org/licenses/>.                                *
  ******************************************************************************/
 
-public class Main extends Application{
+package org.fetm.backuptools.explorer.domain;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("MainLayout.fxml"));
-        loader.load();
-        Parent root = loader.getRoot();
-        primaryStage.setTitle("BackUp Tool");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+/**
+ * Created by florian on 27.05.14.
+ */
+public class Vault {
+    private String name= "no name";
+    private String directory;
+    private String pass;
+    private String host;
+    private String user;
 
-        App app = new App();
-        app.setPrimaryStage(primaryStage);
-
-        MainLayoutController controller = loader.getController();
-        controller.setApp(app);
+    public Vault(String name) {
+        this.name = name;
     }
 
-    public static void main(String[] args){
-        launch(args);
+    public Vault() {
+
     }
 
+    public String toString(){
+        return name;
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDirectory() {
+        return directory;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDirectory(String directory) {
+        this.directory = directory;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 }
