@@ -27,7 +27,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.fetm.backuptools.explorer.GUI.VaultEditorController;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
 
 /**
  * Created by florian on 27.05.14.
@@ -36,15 +41,19 @@ public class App {
 
     private Stage primaryStage;
     private ObservableList<Vault> vaults = FXCollections.observableArrayList();
+//    public static final String FOLDERNAME = "";
 
     public App(){
+
     }
+
     public ObservableList<Vault> getVaults() {
         return vaults;
     }
 
 
     public boolean showVaultEditor( Vault vault) throws IOException {
+
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("VaultEditor.fxml"));
         AnchorPane page = (AnchorPane) loader.load();
 
@@ -80,4 +89,53 @@ public class App {
         }
 
     }
+
+
+    public void editVault(Integer index) {
+
+        try {
+            if(showVaultEditor(getVaults().get(index))){
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+ /*   public void readVaultsFromFiles() {
+
+        Properties properties = new Properties();
+
+        String filePath = System.getProperty("user.home");
+
+        String fileName = name + "_config.cfg";
+
+        Path file_path = Paths.get(filePath + FileSystems.getDefault().getSeparator() + fileName);
+        try {
+
+            if (file_path.toFile().exists()) {
+                properties.load(new FileInputStream(file_path.toFile()));
+            } else {
+                file_path.toFile().createNewFile();
+            }
+
+            properties.setProperty("name", name);
+            properties.setProperty("src", "soucre");
+            properties.setProperty("vault.directory", directory);
+
+            properties.store(new FileOutputStream(file_path.toFile()), "new configuration");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+
+        }
+    }
+
+    public void writeVaultsToFiles() {
+
+
+    }*/
+
 }

@@ -3,7 +3,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ Copyright (c) 2013,2014. Florian Mahon <florian@faivre-et-mahon.ch>       ~
   ~                                                                           ~
@@ -22,13 +21,19 @@
   ~ If not, see <http://www.gnu.org/licenses/>.                               ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fetm.backuptools.explorer.GUI.MainLayoutController">
-<children><SplitPane dividerPositions="0.2608695652173913" focusTraversable="true" layoutX="41.0" layoutY="126.0" prefHeight="320.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
-  <items>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-<children><ListView fx:id="listview" prefHeight="398.0" prefWidth="152.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-</children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-  </items>
-</SplitPane><Button fx:id="add" layoutX="543.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#onClickAddVault" text="add" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
-</children></AnchorPane>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.fetm.backuptools.explorer.GUI.MainLayoutController">
+  <children>
+    <SplitPane dividerPositions="0.2608695652173913" focusTraversable="true" prefHeight="320.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+      <items>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <children>
+            <ListView fx:id="listview" prefHeight="398.0" prefWidth="152.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+          </children>
+        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+      </items>
+    </SplitPane>
+    <Button fx:id="add" mnemonicParsing="false" onMouseClicked="#onClickAddVault" text="Add" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="15.0" />
+    <Button fx:id="edit" layoutX="463.0" layoutY="15.0" mnemonicParsing="false" onMouseClicked="#onClickEditVault" text="Edit" />
+  </children>
+</AnchorPane>

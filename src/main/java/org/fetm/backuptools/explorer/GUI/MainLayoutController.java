@@ -36,6 +36,12 @@ public class MainLayoutController {
         app.addNewVault();
     }
 
+    @FXML
+    public void onClickEditVault() throws IOException {
+        app.editVault(listview.getSelectionModel().getSelectedIndex());
+        init();
+    }
+
     public void init(){
         listview.setItems(app.getVaults());
     }
@@ -44,5 +50,6 @@ public class MainLayoutController {
         this.app = app;
         init();
     }
+
 
 }
