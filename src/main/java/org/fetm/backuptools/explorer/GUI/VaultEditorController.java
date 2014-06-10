@@ -19,9 +19,10 @@
 package org.fetm.backuptools.explorer.GUI;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.fetm.backuptools.explorer.domain.Vault;
+import org.fetm.backuptools.common.VaultConfiguration;
 
 /**
  * Created by florian on 27.05.14.
@@ -29,15 +30,16 @@ import org.fetm.backuptools.explorer.domain.Vault;
 public class VaultEditorController {
     private Stage dialogStage;
     private boolean okClicked;
-    private Vault vault;
+    private VaultConfiguration vaultConfiguration;
 
     @FXML TextField vaultName;
     @FXML TextField vaultPass;
     @FXML TextField vaultHost;
     @FXML TextField vaultUser;
     @FXML TextField vaultDirectory;
+    @FXML TextField vaultLocation;
+    @FXML ComboBox vault_type;
 
-    @FXML
     public void onClickOk(){
         setOkClicked(true);
         dialogStage.close();
@@ -54,11 +56,13 @@ public class VaultEditorController {
     }
 
     public boolean isOkClicked() {
-        vault.setName(vaultName.getText());
-        vault.setDirectory(vaultDirectory.getText());
-        vault.setPass(vaultPass.getText());
-        vault.setHost(vaultHost.getText());
-        vault.setUser(vaultUser.getText());
+        vaultConfiguration.setName(vaultName.getText());
+        vaultConfiguration.setLocation(vaultLocation.getText());
+        vaultConfiguration.setDirectory(vaultDirectory.getText());
+        vaultConfiguration.setPass(vaultPass.getText());
+        vaultConfiguration.setHost(vaultHost.getText());
+        vaultConfiguration.setUser(vaultUser.getText());
+        vaultConfiguration.setVaultType((String)vault_type.getValue());
         return okClicked;
     }
 
@@ -67,12 +71,16 @@ public class VaultEditorController {
     }
 
 
-    public void setVault(Vault vault) {
-        this.vault = vault;
-        vaultName.setText(vault.getName());
-        vaultDirectory.setText(vault.getDirectory());
-        vaultPass.setText(vault.getPass());
-        vaultHost.setText(vault.getHost());
-        vaultUser.setText(vault.getUser());
+    public void setVaultConfiguration(VaultConfiguration vaultConfiguration) {
+        this.vaultConfiguration = vaultConfiguration;
+        vaultName.setText(vaultConfiguration.getName());
+        vaultLocation.setText(vaultConfiguration.getLocation());
+        vaultDirectory.setText(vaultConfiguration.getDirectory());
+        vaultPass.setText(vaultConfiguration.getPass());
+        vaultHost.setText(vaultConfiguration.getHost());
+        vaultUser.setText(vaultConfiguration.getUser());
+        vault_type.getItems().add(VaultConfiguration.TYPE_DIR);
+        vault_type.getItems().add(VaultConfiguration.TYPE_SFTP);
+        vault_type.setValue(vaultConfiguration.getVaultType());
     }
 }

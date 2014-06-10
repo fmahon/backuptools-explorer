@@ -3,7 +3,6 @@ package org.fetm.backuptools.explorer.GUI;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import org.fetm.backuptools.explorer.domain.App;
-import org.fetm.backuptools.explorer.domain.Vault;
 
 import java.io.IOException;
 
@@ -39,11 +38,10 @@ public class MainLayoutController {
     @FXML
     public void onClickEditVault() throws IOException {
         app.editVault(listview.getSelectionModel().getSelectedIndex());
-        init();
     }
 
     public void init(){
-        listview.setItems(app.getVaults());
+        listview.setItems(app.getVaultConfigurations());
     }
 
     public void setApp(App app){

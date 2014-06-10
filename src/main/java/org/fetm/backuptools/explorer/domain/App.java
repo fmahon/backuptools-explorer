@@ -25,11 +25,15 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.fetm.backuptools.common.VaultConfigPersistance;
+import org.fetm.backuptools.common.VaultConfiguration;
 import org.fetm.backuptools.explorer.GUI.VaultEditorController;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -40,19 +44,62 @@ import java.util.Properties;
 public class App {
 
     private Stage primaryStage;
-    private ObservableList<Vault> vaults = FXCollections.observableArrayList();
-//    public static final String FOLDERNAME = "";
+    private ObservableList<VaultConfiguration> vaultConfigurations = FXCollections.observableArrayList();
+    private String configuration_location;
 
     public App(){
+        configuration_location = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + ".backuptools";
 
+        readConfigurationFiles(configuration_location);
     }
 
-    public ObservableList<Vault> getVaults() {
-        return vaults;
+    private void readConfigurationFiles(String configuration_location) {
+        try {
+            if(!Files.exists(Paths.get(configuration_location))){
+                Files.createDirectory(Paths.get(configuration_location));
+            }
+            vaultConfigurations.clear();
+            for(Path file : Files.newDirectoryStream(Paths.get(configuration_location))){
+                Properties properties = new Properties();
+                properties.load(new FileInputStream(file.toFile()));
+
+                VaultConfigPersistance persistance = new VaultConfigPersistance(properties);
+                vaultConfigurations.add(persistance.read());
+            }
+        } catch (IOException e) {
+
+        }
+    }
+
+    private void writeConfigurationFiles(String configuration_location) {
+        try {
+            if(!Files.exists(Paths.get(configuration_location))){
+                Files.createDirectory(Paths.get(configuration_location));
+            }
+
+            for(Path file : Files.newDirectoryStream(Paths.get(configuration_location))){
+                Files.deleteIfExists(file);
+            }
+            int cpt = 0;
+
+            for(VaultConfiguration configuration : getVaultConfigurations()){
+                Properties properties = new Properties();
+                VaultConfigPersistance persistance = new VaultConfigPersistance(properties);
+                persistance.write(configuration);
+                properties.store(new FileOutputStream(configuration_location+FileSystems.getDefault().getSeparator()+"vault"+cpt+".properties"),"autogenerate data");
+                cpt++;
+            }
+        } catch (IOException e) {
+
+        }
+    }
+
+    public ObservableList<VaultConfiguration> getVaultConfigurations() {
+        return vaultConfigurations;
     }
 
 
-    public boolean showVaultEditor( Vault vault) throws IOException {
+    public boolean showVaultEditor( VaultConfiguration vaultConfiguration) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("VaultEditor.fxml"));
         AnchorPane page = (AnchorPane) loader.load();
@@ -67,7 +114,7 @@ public class App {
         VaultEditorController controller = loader.getController();
 
         controller.setDialogStage(dialogStage);
-        controller.setVault(vault);
+        controller.setVaultConfiguration(vaultConfiguration);
 
         dialogStage.showAndWait();
 
@@ -79,10 +126,11 @@ public class App {
     }
 
     public void addNewVault() {
-        Vault vault = new Vault();
+        VaultConfiguration vaultConfiguration = new VaultConfiguration();
         try {
-            if(showVaultEditor(vault)){
-                getVaults().add(vault);
+            if(showVaultEditor(vaultConfiguration)){
+                getVaultConfigurations().add(vaultConfiguration);
+                writeConfigurationFiles(configuration_location);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,48 +142,14 @@ public class App {
     public void editVault(Integer index) {
 
         try {
-            if(showVaultEditor(getVaults().get(index))){
-
+            if(showVaultEditor(getVaultConfigurations().get(index))){
+                writeConfigurationFiles(configuration_location);
+                readConfigurationFiles(configuration_location);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-
- /*   public void readVaultsFromFiles() {
-
-        Properties properties = new Properties();
-
-        String filePath = System.getProperty("user.home");
-
-        String fileName = name + "_config.cfg";
-
-        Path file_path = Paths.get(filePath + FileSystems.getDefault().getSeparator() + fileName);
-        try {
-
-            if (file_path.toFile().exists()) {
-                properties.load(new FileInputStream(file_path.toFile()));
-            } else {
-                file_path.toFile().createNewFile();
-            }
-
-            properties.setProperty("name", name);
-            properties.setProperty("src", "soucre");
-            properties.setProperty("vault.directory", directory);
-
-            properties.store(new FileOutputStream(file_path.toFile()), "new configuration");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-
-        }
-    }
-
-    public void writeVaultsToFiles() {
-
-
-    }*/
 
 }
