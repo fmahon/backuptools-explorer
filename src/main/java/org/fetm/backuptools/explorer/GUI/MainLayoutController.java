@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TreeView;
 import org.fetm.backuptools.common.BackupAgentFactory;
 import org.fetm.backuptools.common.VaultConfiguration;
 import org.fetm.backuptools.common.model.Backup;
@@ -30,7 +31,7 @@ import java.util.List;
  * If not, see <http://www.gnu.org/licenses/>.                                *
  ******************************************************************************/
 
-public class MainLayoutController implements ChangeListener<VaultConfiguration>{
+public class MainLayoutController{
     private App app;
 
     @FXML
@@ -38,6 +39,9 @@ public class MainLayoutController implements ChangeListener<VaultConfiguration>{
 
     @FXML
     public ListView backuplist;
+
+    @FXML
+    public TreeView backuptree;
 
     @FXML
     public void onClickAddVault() throws IOException {
@@ -51,9 +55,22 @@ public class MainLayoutController implements ChangeListener<VaultConfiguration>{
 
     public void init(){
         listview.setItems(app.getVaultConfigurations());
-        listview.getSelectionModel().selectedItemProperty().addListener(this);
+        listview.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<VaultConfiguration>() {
+            @Override
+            public void changed(ObservableValue<? extends VaultConfiguration> observableValue, VaultConfiguration vaultConfiguration, VaultConfiguration newConfiguration) {
+                app.setCurrentVault(newConfiguration);
+            }
+        });
+
 
         backuplist.setItems(app.getBackups());
+        backuplist.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Backup>() {
+            @Override
+            public void changed(ObservableValue<? extends Backup> observableValue, Backup backup, Backup newBackup) {
+                app.setCurrentBackup(newBackup);
+            }
+        });
+        backuptree.setRoot(app.buildTreeViewCurrentBackup());
     }
 
     public void setApp(App app){
@@ -61,9 +78,4 @@ public class MainLayoutController implements ChangeListener<VaultConfiguration>{
         init();
     }
 
-
-    @Override
-    public void changed(ObservableValue<? extends VaultConfiguration> observableValue, VaultConfiguration oldConfiguration, VaultConfiguration newConfiguration) {
-        app.setCurrentVault(newConfiguration);
-    }
 }

@@ -22,6 +22,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -30,6 +32,8 @@ import org.fetm.backuptools.common.IBackupAgent;
 import org.fetm.backuptools.common.VaultConfigPersistance;
 import org.fetm.backuptools.common.VaultConfiguration;
 import org.fetm.backuptools.common.model.Backup;
+import org.fetm.backuptools.common.model.Tree;
+import org.fetm.backuptools.common.model.TreeInfo;
 import org.fetm.backuptools.explorer.GUI.VaultEditorController;
 
 import java.io.FileInputStream;
@@ -51,13 +55,15 @@ public class App {
     private Stage primaryStage;
     private ObservableList<VaultConfiguration> vaultConfigurations = FXCollections.observableArrayList();
     private IBackupAgent currentBackupAgent;
+    private Backup currentBackup;
+    private VaultConfiguration currentVault;
     private ObservableList<Backup> BackupObservableList = FXCollections.observableArrayList();
 
 
 
 
     private String configuration_location;
-    private VaultConfiguration currentVault;
+
 
     public App(){
         configuration_location = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + ".backuptools";
@@ -169,5 +175,47 @@ public class App {
             e.printStackTrace();
         }
 
+    }
+
+    public void setCurrentBackup(Backup newBackup) {
+        currentBackup = newBackup;
+    }
+
+    public TreeItem buildTreeViewCurrentBackup() {
+        if(currentBackup!=null){
+            TreeInfo treeinfo = new TreeInfo();
+            treeinfo.name = currentBackup.getDate();
+            treeinfo.SHA  = currentBackup.getName();
+            treeinfo.type = TreeInfo.TYPE_TREE;
+
+            TreeItem<TreeInfo> root = createNode(treeinfo);
+            return root;
+        }else{
+            return new TreeItem("empty");
+        }
+
+    }
+
+    private TreeItem<TreeInfo> createNode(final TreeInfo info) {
+        return new TreeItem<TreeInfo>(info){
+
+           @Override
+           public ObservableList<TreeItem<TreeInfo>> getChildren(){
+               ObservableList<TreeItem<TreeInfo>> list = FXCollections.observableArrayList();
+
+               Tree tree = currentBackupAgent.getTreeInfosOf(info.SHA);
+               for(TreeInfo info : tree.getAllTreeInfo()){
+                 list.add(createNode(info));
+               }
+               return list;
+           }
+
+           @Override
+            public boolean isLeaf(){
+               return info.type == TreeInfo.TYPE_BLOB;
+           }
+
+
+        };
     }
 }
