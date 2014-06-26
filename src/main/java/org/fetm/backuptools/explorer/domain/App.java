@@ -25,8 +25,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.fetm.backuptools.common.BackupAgentFactory;
+import org.fetm.backuptools.common.IBackupAgent;
 import org.fetm.backuptools.common.VaultConfigPersistance;
 import org.fetm.backuptools.common.VaultConfiguration;
+import org.fetm.backuptools.common.model.Backup;
 import org.fetm.backuptools.explorer.GUI.VaultEditorController;
 
 import java.io.FileInputStream;
@@ -36,6 +39,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -45,6 +50,12 @@ public class App {
 
     private Stage primaryStage;
     private ObservableList<VaultConfiguration> vaultConfigurations = FXCollections.observableArrayList();
+    private List<IBackupAgent> backupAgentList;
+    private ObservableList<List<Backup>> agentObservableList = FXCollections.observableArrayList();
+
+
+
+
     private String configuration_location;
 
     public App(){
@@ -101,6 +112,7 @@ public class App {
 
     public boolean showVaultEditor( VaultConfiguration vaultConfiguration) throws IOException {
 
+
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("VaultEditor.fxml"));
         AnchorPane page = (AnchorPane) loader.load();
 
@@ -112,9 +124,12 @@ public class App {
         dialogStage.setScene(scene);
 
         VaultEditorController controller = loader.getController();
-
         controller.setDialogStage(dialogStage);
         controller.setVaultConfiguration(vaultConfiguration);
+
+        backupAgentList = new ArrayList<IBackupAgent>();
+        createBackupAgentList();
+
 
         dialogStage.showAndWait();
 
@@ -151,5 +166,13 @@ public class App {
         }
 
     }
+
+    public void createBackupAgentList(){
+        backupAgentList.clear();
+        for(VaultConfiguration vaultconfig : vaultConfigurations){
+            backupAgentList.add(BackupAgentFactory.buildBackupAgent(vaultconfig));
+        }
+    }
+
 
 }
