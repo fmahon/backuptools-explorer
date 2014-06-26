@@ -50,18 +50,25 @@ public class App {
 
     private Stage primaryStage;
     private ObservableList<VaultConfiguration> vaultConfigurations = FXCollections.observableArrayList();
-    private List<IBackupAgent> backupAgentList;
-    private ObservableList<List<Backup>> agentObservableList = FXCollections.observableArrayList();
+    private IBackupAgent currentBackupAgent;
+    private ObservableList<Backup> BackupObservableList = FXCollections.observableArrayList();
 
 
 
 
     private String configuration_location;
+    private VaultConfiguration currentVault;
 
     public App(){
         configuration_location = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + ".backuptools";
 
         readConfigurationFiles(configuration_location);
+    }
+
+    public void setCurrentVault(VaultConfiguration currentVault) {
+        currentBackupAgent = BackupAgentFactory.buildBackupAgent(currentVault);
+        BackupObservableList.clear();
+        BackupObservableList.addAll(currentBackupAgent.getListBackups());
     }
 
     private void readConfigurationFiles(String configuration_location) {
@@ -109,6 +116,9 @@ public class App {
         return vaultConfigurations;
     }
 
+    public ObservableList<Backup> getBackups(){
+        return BackupObservableList;
+    }
 
     public boolean showVaultEditor( VaultConfiguration vaultConfiguration) throws IOException {
 
@@ -126,11 +136,6 @@ public class App {
         VaultEditorController controller = loader.getController();
         controller.setDialogStage(dialogStage);
         controller.setVaultConfiguration(vaultConfiguration);
-
-        backupAgentList = new ArrayList<IBackupAgent>();
-        createBackupAgentList();
-
-
         dialogStage.showAndWait();
 
         return controller.isOkClicked();
@@ -153,7 +158,6 @@ public class App {
 
     }
 
-
     public void editVault(Integer index) {
 
         try {
@@ -166,13 +170,4 @@ public class App {
         }
 
     }
-
-    public void createBackupAgentList(){
-        backupAgentList.clear();
-        for(VaultConfiguration vaultconfig : vaultConfigurations){
-            backupAgentList.add(BackupAgentFactory.buildBackupAgent(vaultconfig));
-        }
-    }
-
-
 }

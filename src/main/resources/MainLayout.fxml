@@ -46,7 +46,10 @@
                               </HBox>
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="313.0" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="313.0">
+                           <children>
+                              <TreeView fx:id="brackuptree" layoutX="32.0" layoutY="176.0" prefHeight="703.0" prefWidth="428.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children></AnchorPane>
                     </items>
                   </SplitPane>
                </children></AnchorPane>

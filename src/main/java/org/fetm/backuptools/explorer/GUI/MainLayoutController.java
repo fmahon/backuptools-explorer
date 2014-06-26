@@ -52,6 +52,8 @@ public class MainLayoutController implements ChangeListener<VaultConfiguration>{
     public void init(){
         listview.setItems(app.getVaultConfigurations());
         listview.getSelectionModel().selectedItemProperty().addListener(this);
+
+        backuplist.setItems(app.getBackups());
     }
 
     public void setApp(App app){
@@ -62,7 +64,6 @@ public class MainLayoutController implements ChangeListener<VaultConfiguration>{
 
     @Override
     public void changed(ObservableValue<? extends VaultConfiguration> observableValue, VaultConfiguration oldConfiguration, VaultConfiguration newConfiguration) {
-        List<Backup> backupList = BackupAgentFactory.buildBackupAgent(newConfiguration).getListBackups();
-        backupList.addAll(backupList);
+        app.setCurrentVault(newConfiguration);
     }
 }
