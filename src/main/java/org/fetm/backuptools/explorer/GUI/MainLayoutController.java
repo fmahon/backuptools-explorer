@@ -68,9 +68,10 @@ public class MainLayoutController{
             @Override
             public void changed(ObservableValue<? extends Backup> observableValue, Backup backup, Backup newBackup) {
                 app.setCurrentBackup(newBackup);
+                backuptree.setRoot(app.buildTreeViewCurrentBackup());
             }
         });
-        backuptree.setRoot(app.buildTreeViewCurrentBackup());
+
     }
 
     public void setApp(App app){

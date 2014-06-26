@@ -198,24 +198,30 @@ public class App {
 
     private TreeItem<TreeInfo> createNode(final TreeInfo info) {
         return new TreeItem<TreeInfo>(info){
+           private Boolean isFirst = true;
 
            @Override
            public ObservableList<TreeItem<TreeInfo>> getChildren(){
-               ObservableList<TreeItem<TreeInfo>> list = FXCollections.observableArrayList();
-
-               Tree tree = currentBackupAgent.getTreeInfosOf(info.SHA);
-               for(TreeInfo info : tree.getAllTreeInfo()){
-                 list.add(createNode(info));
+               if(isFirst){
+                   isFirst = false;
+                   super.getChildren().setAll(buildChildren(this));
                }
-               return list;
+               return super.getChildren();
            }
 
            @Override
             public boolean isLeaf(){
-               return info.type == TreeInfo.TYPE_BLOB;
+               return info.type.equals(TreeInfo.TYPE_BLOB);
            }
 
-
+            private ObservableList<TreeItem<TreeInfo>> buildChildren(TreeItem<TreeInfo> treeInfo) {
+                ObservableList<TreeItem<TreeInfo>> children = FXCollections.observableArrayList();
+                Tree tree = currentBackupAgent.getTreeInfosOf(treeInfo.getValue().SHA);
+                for (TreeInfo item : tree.getAllTreeInfo()) {
+                    children.add(createNode(item));
+                }
+                return children;
+             }
         };
     }
 }
