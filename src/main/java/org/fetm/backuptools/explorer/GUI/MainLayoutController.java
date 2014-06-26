@@ -1,10 +1,16 @@
 package org.fetm.backuptools.explorer.GUI;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import org.fetm.backuptools.common.BackupAgentFactory;
+import org.fetm.backuptools.common.VaultConfiguration;
+import org.fetm.backuptools.common.model.Backup;
 import org.fetm.backuptools.explorer.domain.App;
 
 import java.io.IOException;
+import java.util.List;
 
 /******************************************************************************
  * Copyright (c) 2014. Richard Breguet <richard.breguet@gmail.com>            *
@@ -24,11 +30,14 @@ import java.io.IOException;
  * If not, see <http://www.gnu.org/licenses/>.                                *
  ******************************************************************************/
 
-public class MainLayoutController {
+public class MainLayoutController implements ChangeListener<VaultConfiguration>{
     private App app;
 
     @FXML
     public ListView listview;
+
+    @FXML
+    public ListView backuplist;
 
     @FXML
     public void onClickAddVault() throws IOException {
@@ -42,6 +51,7 @@ public class MainLayoutController {
 
     public void init(){
         listview.setItems(app.getVaultConfigurations());
+        listview.getSelectionModel().selectedItemProperty().addListener(this);
     }
 
     public void setApp(App app){
@@ -50,4 +60,9 @@ public class MainLayoutController {
     }
 
 
+    @Override
+    public void changed(ObservableValue<? extends VaultConfiguration> observableValue, VaultConfiguration oldConfiguration, VaultConfiguration newConfiguration) {
+        List<Backup> backupList = BackupAgentFactory.buildBackupAgent(newConfiguration).getListBackups();
+        backupList.addAll(backupList);
+    }
 }
