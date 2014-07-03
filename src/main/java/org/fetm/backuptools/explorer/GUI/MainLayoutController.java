@@ -51,14 +51,18 @@ public class MainLayoutController{
     @FXML
     public void onClickEditVault() throws IOException {
         app.editVault(listview.getSelectionModel().getSelectedIndex());
+        app.reloadConfigurationFiles();
     }
 
     public void init(){
         listview.setItems(app.getVaultConfigurations());
+
         listview.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<VaultConfiguration>() {
             @Override
             public void changed(ObservableValue<? extends VaultConfiguration> observableValue, VaultConfiguration vaultConfiguration, VaultConfiguration newConfiguration) {
-                app.setCurrentVault(newConfiguration);
+               if (newConfiguration != null) {
+                   app.setCurrentVault(newConfiguration);
+               }
             }
         });
 

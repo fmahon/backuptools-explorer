@@ -95,6 +95,11 @@ public class App {
         }
     }
 
+    public void reloadConfigurationFiles(){
+        configuration_location = System.getProperty("user.home") + FileSystems.getDefault().getSeparator() + ".backuptools";
+        readConfigurationFiles(configuration_location);
+    }
+
     private void writeConfigurationFiles(String configuration_location) {
         try {
             if(!Files.exists(Paths.get(configuration_location))){
